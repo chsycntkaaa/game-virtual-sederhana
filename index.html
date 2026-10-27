@@ -1,47 +1,107 @@
-<!DOCTYPE1 html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Dormitory Life</title>
+    <title>Virtual Dorm Life - Character Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
         <!-- Header & Info Hari -->
         <header>
-            <h1>Virtual Dorm Life</h1>
+            <div class="profile-info">
+                <h1 id="char-name-display">Karaktermu</h1>
+                <button class="btn-customize" onclick="openCustomizeModal()">⚙️ Ubah Tampilan</button>
+            </div>
             <div id="day-display" class="day-badge">Hari ke-1</div>
         </header>
 
-        <!-- Panel Status / Statistik Karakter -->
+        <!-- Panel Status / Statistik -->
         <section class="stats-panel">
             <div class="stat-item">
-                <span>⚡ Energi</span>
-                <div class="progress-bar"><div id="energy-bar" class="fill"></div></div>
-                <span id="energy-val">100%</span>
+                <div class="stat-header">
+                    <span>⚡ Energi</span>
+                    <span id="energy-val">100%</span>
+                </div>
+                <div class="progress-bar"><div id="energy-bar" class="fill fill-energy"></div></div>
             </div>
             <div class="stat-item">
-                <span>🧠 Nilai (GPA)</span>
-                <div class="progress-bar"><div id="grades-bar" class="fill"></div></div>
-                <span id="grades-val">75</span>
+                <div class="stat-header">
+                    <span>🧠 Nilai (GPA)</span>
+                    <span id="grades-val">75</span>
+                </div>
+                <div class="progress-bar"><div id="grades-bar" class="fill fill-grades"></div></div>
             </div>
             <div class="stat-item">
-                <span>😊 Mood</span>
-                <div class="progress-bar"><div id="mood-bar" class="fill"></div></div>
-                <span id="mood-val">100%</span>
+                <div class="stat-header">
+                    <span>😊 Mood</span>
+                    <span id="mood-val">100%</span>
+                </div>
+                <div class="progress-bar"><div id="mood-bar" class="fill fill-mood"></div></div>
             </div>
             <div class="stat-item">
-                <span>💰 Uang Saku</span>
-                <span id="money-val" class="money-text">Rp 50.000</span>
+                <div class="stat-header">
+                    <span>💰 Uang Saku</span>
+                    <span id="money-val" class="money-text">Rp 50.000</span>
+                </div>
             </div>
         </section>
 
-        <!-- Area Narasi & Kamar Virtual -->
+        <!-- Area Visual Karakter & Narasi -->
         <main class="game-body">
             <div class="room-screen">
-                <div id="room-avatar">🛋️ 📚 💻</div>
-                <p id="story-text">Selamat datang di kamar kost virtualmu! Seminggu ke depan adalah pekan ujian. Kelola waktu dan energimu dengan bijak agar tidak stress dan tetap lulus!</p>
+                <!-- Balon Dialog Karakter -->
+                <div class="speech-bubble" id="speech-bubble">
+                    "Halo! Seminggu ke depan adalah pekan ujian. Bantu aku jaga stamina ya!"
+                </div>
+
+                <!-- SVG Visual Avatar Dinamis -->
+                <div class="character-box" onclick="triggerCharTalk()">
+                    <svg id="character-svg" viewBox="0 0 200 200" width="160" height="160">
+                        <!-- Badan & Baju -->
+                        <path id="svg-shirt" d="M 50 190 Q 50 135 100 135 Q 150 135 150 190 Z" fill="#89b4fa" />
+                        <path d="M 85 135 L 100 155 L 115 135 Z" fill="#b4befe" />
+                        
+                        <!-- Kepala & Leher -->
+                        <rect x="92" y="120" width="16" height="20" fill="#f5e0dc" rx="5" />
+                        <circle cx="100" cy="85" r="45" fill="#f5e0dc" />
+                        
+                        <!-- Telinga -->
+                        <circle cx="53" cy="88" r="8" fill="#f5e0dc" />
+                        <circle cx="147" cy="88" r="8" fill="#f5e0dc" />
+                        
+                        <!-- Rambut (Dapat Diubah) -->
+                        <path id="svg-hair" d="M 52 80 Q 50 35 100 35 Q 150 35 148 80 Q 130 55 100 60 Q 70 55 52 80 Z" fill="#45475a" />
+                        
+                        <!-- Wajah (Mata, Alis, Mulut) -->
+                        <g id="svg-face-features">
+                            <!-- Alis -->
+                            <path id="eyebrow-l" d="M 72 70 Q 80 67 88 70" stroke="#313244" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            <path id="eyebrow-r" d="M 112 70 Q 120 67 128 70" stroke="#313244" stroke-width="3" stroke-linecap="round" fill="none"/>
+                            <!-- Mata -->
+                            <circle id="eye-l" cx="80" cy="82" r="5" fill="#313244" />
+                            <circle id="eye-r" cx="120" cy="82" r="5" fill="#313244" />
+                            <!-- Pipi Merah -->
+                            <ellipse cx="70" cy="90" rx="6" ry="4" fill="#f38ba8" opacity="0.5" />
+                            <ellipse cx="130" cy="90" rx="6" ry="4" fill="#f38ba8" opacity="0.5" />
+                            <!-- Mulut -->
+                            <path id="svg-mouth" d="M 88 98 Q 100 110 112 98" stroke="#313244" stroke-width="3" stroke-linecap="round" fill="none" />
+                        </g>
+
+                        <!-- Aksesoris Kacamata (Dapat Dinyalakan) -->
+                        <g id="svg-glasses" class="hidden">
+                            <rect x="66" y="74" width="28" height="18" rx="4" fill="none" stroke="#11111b" stroke-width="3"/>
+                            <rect x="106" y="74" width="28" height="18" rx="4" fill="none" stroke="#11111b" stroke-width="3"/>
+                            <line x1="94" y1="82" x2="106" y2="82" stroke="#11111b" stroke-width="3"/>
+                        </g>
+
+                        <!-- Efek Status Status Overhead (Stres / Lelah) -->
+                        <text id="status-icon" x="140" y="55" font-size="22" class="hidden">💬</text>
+                    </svg>
+                </div>
+
+                <p id="story-text">Pilih aktivitasmu hari ini untuk menjaga keseimbangan hidup dan nilai ujian!</p>
             </div>
 
             <!-- Tombol Aksi Player -->
@@ -53,11 +113,46 @@
             </div>
         </main>
 
-        <!-- Modal Game Over / Reset -->
-        <div id="modal-overlay" class="hidden">
+        <!-- Modal Kustomisasi Karakter -->
+        <div id="customize-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h2>Kustomisasi Karakter</h2>
+                
+                <div class="form-group">
+                    <label for="input-name">Nama Karakter:</label>
+                    <input type="text" id="input-name" value="Budi" maxlength="12">
+                </div>
+
+                <div class="form-group">
+                    <label>Gaya Rambut:</label>
+                    <select id="select-hair" onchange="previewCharacter()">
+                        <option value="short">Rapi / Short Cut</option>
+                        <option value="wavy">Poni / Wavy</option>
+                        <option value="bun">Sanggul / Top Bun</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Warna Baju:</label>
+                    <input type="color" id="input-shirt-color" value="#89b4fa" onchange="previewCharacter()">
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="check-glasses" onchange="previewCharacter()">
+                    <label for="check-glasses">Pakai Kacamata</label>
+                </div>
+
+                <div class="modal-actions">
+                    <button onclick="saveCustomization()">Simpan ✨</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Game Over / End Game -->
+        <div id="modal-overlay" class="modal-overlay hidden">
             <div class="modal-content">
                 <h2 id="modal-title">Game Over</h2>
-                <p id="modal-desc">Karaktermu mengalami kelahan ekstrem.</p>
+                <p id="modal-desc">Karaktermu mengalami kelelahan ekstrem.</p>
                 <button onclick="resetGame()">Main Lagi 🔄</button>
             </div>
         </div>
