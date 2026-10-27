@@ -1,81 +1,68 @@
-<!DOCTYPE html>
+<!DOCTYPE1 html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teka-Teki Silang (TTS) Pengetahuan Umum</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Dormitory Life</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-950 font-sans text-slate-100 flex items-center justify-center min-h-screen p-2 sm:p-4 select-none">
+<body>
+    <div class="game-container">
+        <!-- Header & Info Hari -->
+        <header>
+            <h1>Virtual Dorm Life</h1>
+            <div id="day-display" class="day-badge">Hari ke-1</div>
+        </header>
 
-  <!-- Main Container -->
-  <div class="w-full max-w-4xl bg-slate-900 rounded-3xl shadow-2xl border-4 border-slate-800 overflow-hidden flex flex-col">
-    
-    <!-- Header / Top Bar -->
-    <header class="bg-slate-900/90 border-b border-slate-800 p-4 flex flex-wrap justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-black">
-          <i class="fa-solid fa-puzzle-piece"></i>
+        <!-- Panel Status / Statistik Karakter -->
+        <section class="stats-panel">
+            <div class="stat-item">
+                <span>⚡ Energi</span>
+                <div class="progress-bar"><div id="energy-bar" class="fill"></div></div>
+                <span id="energy-val">100%</span>
+            </div>
+            <div class="stat-item">
+                <span>🧠 Nilai (GPA)</span>
+                <div class="progress-bar"><div id="grades-bar" class="fill"></div></div>
+                <span id="grades-val">75</span>
+            </div>
+            <div class="stat-item">
+                <span>😊 Mood</span>
+                <div class="progress-bar"><div id="mood-bar" class="fill"></div></div>
+                <span id="mood-val">100%</span>
+            </div>
+            <div class="stat-item">
+                <span>💰 Uang Saku</span>
+                <span id="money-val" class="money-text">Rp 50.000</span>
+            </div>
+        </section>
+
+        <!-- Area Narasi & Kamar Virtual -->
+        <main class="game-body">
+            <div class="room-screen">
+                <div id="room-avatar">🛋️ 📚 💻</div>
+                <p id="story-text">Selamat datang di kamar kost virtualmu! Seminggu ke depan adalah pekan ujian. Kelola waktu dan energimu dengan bijak agar tidak stress dan tetap lulus!</p>
+            </div>
+
+            <!-- Tombol Aksi Player -->
+            <div class="action-buttons">
+                <button onclick="doAction('study')">📚 Belajar Ujian</button>
+                <button onclick="doAction('rest')">🛌 Tidur / Istirahat</button>
+                <button onclick="doAction('play')">🎮 Main Game / Santai</button>
+                <button onclick="doAction('work')">💼 Kerja Paruh Waktu</button>
+            </div>
+        </main>
+
+        <!-- Modal Game Over / Reset -->
+        <div id="modal-overlay" class="hidden">
+            <div class="modal-content">
+                <h2 id="modal-title">Game Over</h2>
+                <p id="modal-desc">Karaktermu mengalami kelahan ekstrem.</p>
+                <button onclick="resetGame()">Main Lagi 🔄</button>
+            </div>
         </div>
-        <div>
-          <h1 class="font-black text-sm uppercase tracking-wider text-amber-300">TTS Pengetahuan Umum</h1>
-          <p class="text-[10px] text-slate-400">Asah otak dengan teka-teki silang interaktif</p>
-        </div>
-      </div>
+    </div>
 
-      <!-- Controls & Status -->
-      <div class="flex items-center gap-3">
-        <button id="btn-check" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition shadow-lg active:scale-95 text-xs flex items-center gap-2">
-          <i class="fa-solid fa-check"></i> Cek Jawaban
-        </button>
-        <button id="btn-reset" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-2 rounded-xl transition border border-slate-700 text-xs">
-          <i class="fa-solid fa-rotate-right"></i>
-        </button>
-      </div>
-    </header>
-
-    <!-- Main Workspace Content -->
-    <main class="grid grid-cols-1 md:grid-cols-12 bg-slate-950 p-4 gap-4 flex-1">
-      
-      <!-- Left Column: Grid TTS (Canvas / DOM Grid) -->
-      <div class="md:col-span-6 bg-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-col items-center justify-center">
-        <div id="tts-grid" class="grid grid-cols-7 gap-1 bg-slate-950 p-3 rounded-xl border border-slate-800 shadow-inner">
-          <!-- Rendered via JavaScript -->
-        </div>
-      </div>
-
-      <!-- Right Column: Clues / Pertanyaan -->
-      <div class="md:col-span-6 bg-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-col gap-4 overflow-y-auto max-h-[420px]">
-        
-        <!-- Mendatar -->
-        <div>
-          <h2 class="text-xs font-black uppercase tracking-wider text-amber-400 mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-arrow-right"></i> Mendatar
-          </h2>
-          <ul id="clues-horizontal" class="space-y-1.5 text-xs text-slate-300 font-medium">
-            <!-- Rendered via JavaScript -->
-          </ul>
-        </div>
-
-        <!-- Menurun -->
-        <div class="border-t border-slate-800 pt-3">
-          <h2 class="text-xs font-black uppercase tracking-wider text-cyan-400 mb-2 flex items-center gap-2">
-            <i class="fa-solid fa-arrow-down"></i> Menurun
-          </h2>
-          <ul id="clues-vertical" class="space-y-1.5 text-xs text-slate-300 font-medium">
-            <!-- Rendered via JavaScript -->
-          </ul>
-        </div>
-
-      </div>
-    </main>
-
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
